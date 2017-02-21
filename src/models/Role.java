@@ -98,7 +98,7 @@ public class Role extends Model {
         id = rs.getInt("id");
         actor_id = rs.getInt("actor_id");
         movie_id = rs.getInt("movie_id");
-        description = rs.getString("descritpion");
+        description = rs.getString("description");
     }
     
     @Override

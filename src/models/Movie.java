@@ -60,6 +60,19 @@ public class Movie extends Model {
         return director_id;
     }
     
+    // Returns the director of the movie
+    public Director getDirector()
+    {
+        try
+        {
+            return ORM.load(Director.class, director_id);
+        }
+        catch(Exception ex)
+        {
+            System.err.println(ex.getMessage());
+            return null;
+        }
+    }
     // Assigns the title of the movie
     public void setTitle(String title)
     {

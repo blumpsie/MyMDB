@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/mymdb-main.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mymdb.MyMDBController">
    <center>
       <SplitPane dividerPositions="0.6" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
@@ -26,13 +25,13 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ListView fx:id="movieList" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
-                  <ListView fx:id="actorList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ListView fx:id="movieList" onMouseClicked="#movieSelect" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                  <ListView fx:id="actorList" onMouseClicked="#actorSelect" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="Movies" GridPane.halignment="CENTER" />
                   <Label text="Actors" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
                </children>
             </GridPane>
-            <TextArea prefHeight="200.0" prefWidth="200.0" />
+            <TextArea fx:id="display" editable="false" prefHeight="200.0" prefWidth="200.0" />
          </items>
       </SplitPane>
    </center>
