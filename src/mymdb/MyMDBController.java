@@ -38,10 +38,30 @@ public class MyMDBController implements Initializable {
     @FXML
     private void movieSelect(Event event)
     {
-        Movie movie = movieList.getSelectionModel().getSelectedItem();
-        lastFocused = movieList;
-        
-        display.setText(Helper.movieInfo(movie));
+        try
+        {
+            Actor actor = actorList.getSelectionModel().getSelectedItem();
+            Movie movie = movieList.getSelectionModel().getSelectedItem();
+            lastFocused = movieList;
+
+                if((actor != null) && (movie != null))
+                {
+                    // TODO fix errors when actor and movie aren't relatable
+                    Role role = ORM.findOne(Role.class, 
+                                  "where actor_id=? and movie_id=?", 
+                                  new Object[]{actor.getId(), movie.getId()});
+                    display.setText(Helper.roleInfo(role));
+                }
+                else
+                {
+                    display.setText(Helper.movieInfo(movie));
+                }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace(System.err);
+            System.exit(1);
+        }
     }
     
     @FXML
@@ -49,11 +69,13 @@ public class MyMDBController implements Initializable {
     {
         try
         {
+            Movie movie = movieList.getSelectionModel().getSelectedItem();
             Actor actor = actorList.getSelectionModel().getSelectedItem();
             lastFocused = movieList;
             
             Collection<Role> roles = ORM.findAll(Role.class,
-                    "where actor_id=?", new Object[]{actor.getId()});
+                                             "where actor_id=?", 
+                                             new Object[]{actor.getId()});
             actorMovieIds.clear();
             
             // add the movie ids from the actors roles 
@@ -66,7 +88,19 @@ public class MyMDBController implements Initializable {
             // pick up style changes in movieList
             movieList.refresh();
             
-            display.clear();
+            if((actor != null) && (movie != null))
+            {
+                // TODO fix errors when actor and movie aren't relatable
+                Role role = ORM.findOne(Role.class, 
+                            "where actor_id=? and movie_id=?", 
+                             new Object[]{actor.getId(), movie.getId()});
+                display.setText(Helper.roleInfo(role));
+            }
+            else
+            {
+                display.clear();
+            }
+            
         } // end of try
         catch (Exception ex)
         {

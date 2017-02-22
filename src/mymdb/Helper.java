@@ -10,10 +10,6 @@ import models.Role;
  */
 public class Helper {
     
-    static String actorInfo(Actor actor)
-    {
-        return String.format("Actor: %s\n", actor.getName());
-    }
     static String movieInfo(Movie movie)
     {
         return String.format("MOVIE INFORMATION\n"
@@ -32,7 +28,7 @@ public class Helper {
         return String.format("ROLE INFORMATION\n"
                             + "Movie: %s\n"
                             + "Actor: %s\n"
-                            + "Description: $s\n", 
+                            + "Description: %s\n", 
                             role.getMovie().getTitle(),
                             role.getActor().getName(),
                             role.getDescription());
