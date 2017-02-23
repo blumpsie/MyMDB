@@ -44,8 +44,10 @@
    <bottom>
       <HBox spacing="5.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Button" />
-            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" onAction="#orderByTitle" text="Order Movies By Title" />
+            <Button mnemonicParsing="false" onAction="#orderByYear" text="Order Movies By Year" />
+            <Button mnemonicParsing="false" onAction="#addRole" text="Add Role" />
+            <Button mnemonicParsing="false" onAction="#clear" text="Clear Selections" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -55,19 +57,14 @@
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="Actor/Director">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#addActorOrDirector" text="Add" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="Movie">
             <items>
               <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
             </items>
           </Menu>
         </menus>

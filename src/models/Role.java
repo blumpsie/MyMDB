@@ -33,6 +33,12 @@ public class Role extends Model {
         this.movie_id = movie.getId();
     }
     
+    public Role(Movie movie, Actor actor)
+    {
+        this.movie_id = movie.getId();
+        this.actor_id = actor.getId();
+    }
+    
     
     @Override
     public int getId() // Returns the ID

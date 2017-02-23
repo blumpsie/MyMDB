@@ -33,4 +33,11 @@ public class Helper {
                             role.getActor().getName(),
                             role.getDescription());
     }
+    
+    static java.sql.Date currentDate()
+    {
+        long now = new java.util.Date().getTime();
+        java.sql.Date date = new java.sql.Date(now);
+        return date;
+    }
 }

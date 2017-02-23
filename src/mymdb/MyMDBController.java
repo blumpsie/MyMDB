@@ -1,16 +1,27 @@
 package mymdb;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import models.Actor;
+import models.Director;
 import models.Movie;
 import models.ORM;
 import models.Role;
@@ -21,20 +32,48 @@ import models.Role;
 public class MyMDBController implements Initializable {
     
     // DATA MEMBERS
+    // ------------
     @FXML
     private ListView<Movie> movieList;
     
     @FXML
     private ListView<Actor> actorList;
     
+    @FXML
+    private ListView<Director> directorList;
+    
     private Node lastFocused = null;
     
     private final Collection<Integer> actorMovieIds = new HashSet<>();
     
+    // ACCESSOR METHODS
+    // ----------------
+    ListView<Movie> getMovieList()
+    {
+        return movieList;
+    }
+    
+    ListView<Actor> getActorList()
+    {
+        return actorList;
+    }
+    
+    TextArea getDisplay()
+    {
+        return display;
+    }
     @FXML
     TextArea display;
     
+    ListView<Director> getDirectorList()
+    {
+        return directorList;
+    }
+    
     // HANDLER FUNCTIONS
+    // -----------------
+    
+    // User Selects a Movie
     @FXML
     private void movieSelect(Event event)
     {
@@ -46,16 +85,33 @@ public class MyMDBController implements Initializable {
 
                 if((actor != null) && (movie != null))
                 {
-                    // TODO fix errors when actor and movie aren't relatable
+                    
                     Role role = ORM.findOne(Role.class, 
                                   "where actor_id=? and movie_id=?", 
                                   new Object[]{actor.getId(), movie.getId()});
+                    
+                    // Checks to see if a role was found
+                    if(role == null)
+                    {
+                        throw new ExpectedException("Actor wasn't in "
+                                                            + "that movie.");
+                    }
                     display.setText(Helper.roleInfo(role));
                 }
                 else
                 {
                     display.setText(Helper.movieInfo(movie));
                 }
+        } // End of Try
+        catch(ExpectedException ex)
+        {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText(ex.getMessage());
+            alert.show();
+            if (lastFocused != null)
+            {
+                lastFocused.requestFocus();
+            }
         }
         catch (Exception ex)
         {
@@ -64,6 +120,7 @@ public class MyMDBController implements Initializable {
         }
     }
     
+    // User selects an Actor
     @FXML
     private void actorSelect(Event event)
     {
@@ -90,10 +147,16 @@ public class MyMDBController implements Initializable {
             
             if((actor != null) && (movie != null))
             {
-                // TODO fix errors when actor and movie aren't relatable
                 Role role = ORM.findOne(Role.class, 
                             "where actor_id=? and movie_id=?", 
                              new Object[]{actor.getId(), movie.getId()});
+                
+                // Checks to see if a role was found
+                if(role == null)
+                {
+                    throw new ExpectedException("Actor wasn't in that movie");
+                }
+                
                 display.setText(Helper.roleInfo(role));
             }
             else
@@ -102,7 +165,154 @@ public class MyMDBController implements Initializable {
             }
             
         } // end of try
+        catch(ExpectedException ex)
+        {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText(ex.getMessage());
+            alert.show();
+            if (lastFocused != null)
+            {
+                lastFocused.requestFocus();
+            }
+        }
         catch (Exception ex)
+        {
+            ex.printStackTrace(System.err);
+            System.exit(1);
+        }
+    }
+    
+    // Orders the Movies by Year
+    @FXML
+    private void orderByYear(Event event)
+    {
+        System.out.println("Order By Year");
+        // TODO Write orderByYear method
+    }
+    
+    // Orders the Movies by Title
+    @FXML
+    private void orderByTitle(Event event)
+    {
+        System.out.println("Orderd By Title");
+        // TODO Write orderByTitle method
+    }
+    
+    // Clears the user selections
+    @FXML
+    private void clear(Event event)
+    {
+        movieList.getSelectionModel().clearSelection();
+        actorList.getSelectionModel().clearSelection();
+        actorMovieIds.clear();
+        movieList.refresh();
+        display.setText("");
+    }
+    
+    // Join an Actor and a Movie with a Role
+    @FXML
+    private void addRole(Event event)
+    {
+        try
+        {
+            Movie movie = movieList.getSelectionModel().getSelectedItem();
+            Actor actor = actorList.getSelectionModel().getSelectedItem();
+            
+            // Checks to see if both Movie and Actor are selected
+            if((actor == null) || (movie == null))
+            {
+                throw new ExpectedException("Must select Actor and Movie.");
+            }
+            
+            Role role = ORM.findOne(Role.class, 
+                        "where actor_id=? and movie_id=?", 
+                        new Object[]{actor.getId(), movie.getId()});
+            
+            // Checks to see if there is already a role attached 
+            // to the specified Actor and Movie
+            if (role != null)
+            {
+                throw new ExpectedException("A role already exist.");
+            }
+            
+            role = new Role(actor, movie);
+            ORM.store(role); // TODO Fix Program Crash
+            actorMovieIds.add(movie.getId());
+            movieList.refresh();
+            movieList.requestFocus();
+            display.setText(Helper.roleInfo(role));
+        }// End of Try
+        catch (ExpectedException ex)
+        {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText(ex.getMessage());
+            alert.show();
+            if (lastFocused != null)
+            {
+                lastFocused.requestFocus();
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace(System.err);
+            System.exit(1);
+        }
+    }
+    
+    // Add an Actor or Director
+    @FXML
+    private void addActorOrDirector(Event event)
+    {
+        try
+        {
+            // Creates a new FXMLLoader object with AddActorOrDirector arg
+            URL fxml = getClass().getResource("AddActorOrDirector.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(fxml);
+            fxmlLoader.load();
+            
+            // gets the scene from the loader
+            Scene scene = new Scene(fxmlLoader.getRoot());
+            
+            // Create a stage for the scene
+            Stage dialogStage = new Stage();
+            dialogStage.setScene(scene);
+            
+            // specifies a dialog title
+            dialogStage.setTitle("Add an Actor or a Director");
+            
+            // Blocks the application
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            
+            // invoking the dialog
+            dialogStage.show();
+            
+            AddActorOrDirectorController dialogController = 
+                                                    fxmlLoader.getController();
+            dialogController.setMainController(this);
+            
+            // Prevents vertical resizing
+            double height = dialogStage.getHeight();
+            dialogStage.setMaxHeight(height);
+            dialogStage.setMinHeight(height);
+            
+            // Prevents the horizontal size from getting too small
+            dialogStage.setMinWidth(350);
+            
+            // make sure the user wants to close the window
+            dialogStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setContentText("Are you sure that you want to exit?");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() != ButtonType.OK) {
+                        event.consume();
+                    }
+                }
+            });
+            
+        } // End of Try
+        catch (IOException ex)
         {
             ex.printStackTrace(System.err);
             System.exit(1);
