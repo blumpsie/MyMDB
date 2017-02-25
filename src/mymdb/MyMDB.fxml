@@ -46,7 +46,6 @@
          <children>
             <Button mnemonicParsing="false" onAction="#orderByTitle" text="Order Movies By Title" />
             <Button mnemonicParsing="false" onAction="#orderByYear" text="Order Movies By Year" />
-            <Button mnemonicParsing="false" onAction="#addRole" text="Add Role" />
             <Button mnemonicParsing="false" onAction="#clear" text="Clear Selections" />
          </children>
          <padding>
@@ -59,14 +58,21 @@
         <menus>
           <Menu mnemonicParsing="false" text="Actor/Director">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#addActorOrDirector" text="Add" />
+              <MenuItem mnemonicParsing="false" onAction="#addActorOrDirector" text="Add Actor/Director" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Movie">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem mnemonicParsing="false" onAction="#addMovie" text="add Movie" />
+                  <MenuItem mnemonicParsing="false" text="Remove Movie" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Role">
+              <items>
+                  <MenuItem mnemonicParsing="false" onAction="#addRole" text="Add Role" />
+                  <MenuItem mnemonicParsing="false" text="Edit Role" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>

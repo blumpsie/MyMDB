@@ -21,7 +21,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import models.Actor;
-import models.Director;
 import models.Movie;
 import models.ORM;
 import models.Role;
@@ -38,9 +37,6 @@ public class MyMDBController implements Initializable {
     
     @FXML
     private ListView<Actor> actorList;
-    
-    @FXML
-    private ListView<Director> directorList;
     
     private Node lastFocused = null;
     
@@ -64,11 +60,6 @@ public class MyMDBController implements Initializable {
     }
     @FXML
     TextArea display;
-    
-    ListView<Director> getDirectorList()
-    {
-        return directorList;
-    }
     
     // HANDLER FUNCTIONS
     // -----------------
@@ -298,6 +289,7 @@ public class MyMDBController implements Initializable {
             // Prevents the horizontal size from getting too small
             dialogStage.setMinWidth(350);
             
+            // TODO fix window close error
             // make sure the user wants to close the window
             dialogStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
@@ -318,6 +310,68 @@ public class MyMDBController implements Initializable {
             System.exit(1);
         }
     }
+    
+    // Add a Movie
+    @FXML
+    private void addMovie(Event event)
+    {
+        try
+        {
+            //get fxmlLoader
+            URL fxml = getClass().getResource("AddMovie.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(fxml);
+            fxmlLoader.load();
+
+            // get scene
+            Scene scene = new Scene(fxmlLoader.getRoot());
+
+            // create stage
+            Stage dialogStage = new Stage();
+            dialogStage.setScene(scene);
+
+            // specify title
+            dialogStage.setTitle("Add a Movie");
+
+            // block the main application
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            // invoke dialog
+            dialogStage.show();
+            
+            // get controller
+            AddMovieController dialogController = fxmlLoader.getController();
+            
+            //pass the MyMDB controller to the dialog
+            dialogController.setMainController(this);
+            
+            // prevent the dialog from becoming too small
+            double height = dialogStage.getHeight();
+            double width = dialogStage.getWidth();
+            dialogStage.setMinHeight(height);
+            dialogStage.setMinWidth(width);
+            
+            // TODO fix window close error
+            // make they user wants to close window
+            dialogStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setContentText("Are you sure that you want to exit?");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() != ButtonType.OK) {
+                        event.consume();
+                    }
+                }
+            });
+        }// End of Try
+        catch(IOException ex)
+        {
+            ex.printStackTrace(System.err);
+            System.exit(1);
+        }
+    }
+    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try // adding the movies and actors to the lists

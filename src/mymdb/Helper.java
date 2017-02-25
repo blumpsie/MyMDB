@@ -1,6 +1,6 @@
 package mymdb;
 
-import models.Actor;
+import java.util.Calendar;
 import models.Movie;
 import models.Role;
 
@@ -34,10 +34,10 @@ public class Helper {
                             role.getDescription());
     }
     
-    static java.sql.Date currentDate()
+    static int currentYear()
     {
-        long now = new java.util.Date().getTime();
-        java.sql.Date date = new java.sql.Date(now);
-        return date;
+        Calendar now = Calendar.getInstance();
+        int year = now.get(Calendar.YEAR);
+        return year;
     }
 }
