@@ -61,16 +61,16 @@
               <MenuItem mnemonicParsing="false" onAction="#addActorOrDirector" text="Add Actor/Director" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Movie">
+          <Menu mnemonicParsing="false" onShown="#activateMoviesMenu" text="Movie">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#addMovie" text="add Movie" />
-                  <MenuItem mnemonicParsing="false" text="Remove Movie" />
+                  <MenuItem fx:id="removeMovieMenuItem" mnemonicParsing="false" onAction="#removeMovie" text="Remove Movie" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Role">
+            <Menu mnemonicParsing="false" onShown="#activateRolesMenu" text="Role">
               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#addRole" text="Add Role" />
-                  <MenuItem mnemonicParsing="false" text="Edit Role" />
+                  <MenuItem fx:id="addRoleMenuItem" mnemonicParsing="false" onAction="#addRole" text="Add Role" />
+                  <MenuItem fx:id="editRoleMenuItem" mnemonicParsing="false" text="Edit Role" />
               </items>
             </Menu>
         </menus>

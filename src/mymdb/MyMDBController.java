@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -42,6 +43,32 @@ public class MyMDBController implements Initializable {
     
     private final Collection<Integer> actorMovieIds = new HashSet<>();
     
+    @FXML
+    private MenuItem removeMovieMenuItem;
+    
+    @FXML
+    private MenuItem editRoleMenuItem;
+    
+    @FXML
+    private MenuItem addRoleMenuItem;
+    
+    // MEMBER FUNTIONS
+    // ---------------
+    @FXML
+    private void activateMoviesMenu(Event event)
+    {
+        Movie movie = movieList.getSelectionModel().getSelectedItem();
+        removeMovieMenuItem.setDisable(movie == null);
+    }
+    
+    @FXML
+    private void activateRolesMenu(Event event)
+    {
+        Movie movie = movieList.getSelectionModel().getSelectedItem();
+        Actor actor = actorList.getSelectionModel().getSelectedItem();
+        editRoleMenuItem.setDisable((movie == null) || (actor == null));
+        addRoleMenuItem.setDisable((movie == null) || (actor == null));
+    }
     // ACCESSOR METHODS
     // ----------------
     ListView<Movie> getMovieList()
@@ -209,12 +236,6 @@ public class MyMDBController implements Initializable {
             Movie movie = movieList.getSelectionModel().getSelectedItem();
             Actor actor = actorList.getSelectionModel().getSelectedItem();
             
-            // Checks to see if both Movie and Actor are selected
-            if((actor == null) || (movie == null))
-            {
-                throw new ExpectedException("Must select Actor and Movie.");
-            }
-            
             Role role = ORM.findOne(Role.class, 
                         "where actor_id=? and movie_id=?", 
                         new Object[]{actor.getId(), movie.getId()});
@@ -371,7 +392,64 @@ public class MyMDBController implements Initializable {
         }
     }
     
-
+    @FXML
+    private void removeMovie(Event event)
+    {
+        try
+        {
+            Movie movie = movieList.getSelectionModel().getSelectedItem();
+            
+            // Find all roles that the movie is linked to
+            Collection<Role> roles = ORM.findAll(Role.class,
+                    "where movie_id=?", new Object[]{movie.getId()});
+            
+            
+            // if Roles exist delete them
+            if (!roles.isEmpty())
+            {
+                for(Role role : roles)
+                {
+                    ORM.remove(role);
+                }
+            }
+            
+            // Confirm that the user wants todelete selected movie
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Are you sure?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get() != ButtonType.OK)
+            {
+                return;
+            }
+            
+            // remove movie
+            ORM.remove(movie);
+            
+            // remove from list
+            movieList.getItems().remove(movie);
+            movieList.getSelectionModel().clearSelection();
+            
+            // display nothing in the text area
+            display.setText("");
+        }
+        catch (ExpectedException ex)
+        {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText(ex.getMessage());
+            alert.show();
+            if(lastFocused != null)
+            {
+                lastFocused.requestFocus();
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace(System.err);
+            System.exit(1);
+        }
+    }
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try // adding the movies and actors to the lists
