@@ -310,7 +310,6 @@ public class MyMDBController implements Initializable {
             // Prevents the horizontal size from getting too small
             dialogStage.setMinWidth(350);
             
-            // TODO fix window close error
             // make sure the user wants to close the window
             dialogStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
@@ -371,7 +370,6 @@ public class MyMDBController implements Initializable {
             dialogStage.setMinHeight(height);
             dialogStage.setMinWidth(width);
             
-            // TODO fix window close error
             // make they user wants to close window
             dialogStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
@@ -449,6 +447,88 @@ public class MyMDBController implements Initializable {
         }
     }
     
+    @FXML
+    private void editRole(Event event)
+    {
+        try
+        {
+            //get selected role
+            Actor actor = actorList.getSelectionModel().getSelectedItem();
+            Movie movie = movieList.getSelectionModel().getSelectedItem();
+            
+            Role role = ORM.findOne(Role.class, 
+                    "where actor_id=? and movie_id=?", 
+                    new Object[]{actor.getId(), movie.getId()});
+            
+            // throw an exception if their is now role for 
+            //selected movie and actor
+            if(role == null)
+            {
+                throw new ExpectedException("Role does not exist.");
+            }
+            
+            // get FXMLLoader
+            URL fxml = getClass().getResource("EditRole.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(fxml);
+            fxmlLoader.load();
+
+            // get scene
+            Scene scene = new Scene(fxmlLoader.getRoot());
+
+            // create stage
+            Stage dialogStage = new Stage();
+            dialogStage.setScene(scene);
+            
+            // specify title
+            dialogStage.setTitle("Edit a Role");
+            
+            // block main application
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            
+            // invoke dialog
+            dialogStage.show();
+            
+            // get controller
+            EditRoleController dialogController = fxmlLoader.getController();
+            
+            // pass MyMDBController
+            dialogController.setMainController(this);
+            
+            // set minimum width and height
+            double height = dialogStage.getHeight();
+            double width = dialogStage.getWidth();
+            dialogStage.setMinHeight(height);
+            dialogStage.setMinWidth(width);
+            
+            // seed the data for the selected role
+            dialogController.getTitleLabel().setText(movie.getTitle());
+            dialogController.getActorLabel().setText(actor.getName());
+            dialogController.getDescriptionArea().setText(role.getDescription());
+            
+            // set the role to be modified in the dialog
+            dialogController.setRoleToModify(role);
+        }// End of Try
+        catch (ExpectedException ex)
+        {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText(ex.getMessage());
+            alert.show();
+            if (lastFocused != null)
+            {
+                lastFocused.requestFocus();
+            }
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace(System.err);
+            System.exit(1);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace(System.err);
+            System.exit(1);
+        }
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {

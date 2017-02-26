@@ -90,6 +90,7 @@ public class AddMovieController implements Initializable {
                                                             + "Director.");
             }
             
+            // TODO replace extra spaces in the title field
             int yearInt = Integer.valueOf(year);
             if ((yearInt < 1900) || (yearInt > Helper.currentYear()))
             {

@@ -70,7 +70,7 @@
             <Menu mnemonicParsing="false" onShown="#activateRolesMenu" text="Role">
               <items>
                   <MenuItem fx:id="addRoleMenuItem" mnemonicParsing="false" onAction="#addRole" text="Add Role" />
-                  <MenuItem fx:id="editRoleMenuItem" mnemonicParsing="false" text="Edit Role" />
+                  <MenuItem fx:id="editRoleMenuItem" mnemonicParsing="false" onAction="#editRole" text="Edit Role" />
               </items>
             </Menu>
         </menus>

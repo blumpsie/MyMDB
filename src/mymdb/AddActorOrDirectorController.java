@@ -79,7 +79,8 @@ public class AddActorOrDirectorController implements Initializable {
             {
                 throw new ExpectedException("Actor already exists.");
             }
-
+            
+            // TODO replace extra spaces in the name
             if(role.equals("Actor"))
             {
                 // access the Controller
@@ -117,7 +118,7 @@ public class AddActorOrDirectorController implements Initializable {
                 
                 // put it in the database
                 Director newDirector = new Director(name);
-                ORM.store(newDirector); // TODO Fix Program Crash
+                ORM.store(newDirector);
                 
                 // set text display
                 display.clear();
