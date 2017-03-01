@@ -31,6 +31,7 @@ public class Role extends Model {
     {
         this.actor_id = actor.getId();
         this.movie_id = movie.getId();
+        this.description = "";
     }
     
     public Role(Movie movie, Actor actor)

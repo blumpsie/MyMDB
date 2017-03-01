@@ -26,7 +26,7 @@
       <Label text="Title:" />
       <Label text="Actor:" GridPane.rowIndex="1" />
       <Label text="Description:" GridPane.rowIndex="2" />
-      <TextArea fx:id="descriptionArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <TextArea fx:id="descriptionArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <children>
             <Button mnemonicParsing="false" onAction="#modify" text="Modify" />

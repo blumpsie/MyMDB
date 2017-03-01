@@ -60,8 +60,11 @@ public class AddActorOrDirectorController implements Initializable {
         try
         {
             String role = roleSelection.getSelectionModel().getSelectedItem();
-            String name = nameField.getText().trim();
-
+            String name = nameField.getText();
+            
+            // replace any extra spaces and trim off whitespace at either end
+            name = name.replaceAll("\\s+", " ").trim();
+            
             if(name.length() <= 0)
             {
                 throw new ExpectedException("The Actor or Director "
@@ -80,7 +83,6 @@ public class AddActorOrDirectorController implements Initializable {
                 throw new ExpectedException("Actor already exists.");
             }
             
-            // TODO replace extra spaces in the name
             if(role.equals("Actor"))
             {
                 // access the Controller
@@ -93,7 +95,7 @@ public class AddActorOrDirectorController implements Initializable {
                 
                 // reload the list from the database
                 actorList.getItems().clear();
-                Collection<Actor> actors = ORM.findAll(Actor.class);
+                Collection<Actor> actors = ORM.findAll(Actor.class, "order by name");
                 for (Actor actor: actors)
                 {
                     actorList.getItems().add(actor);

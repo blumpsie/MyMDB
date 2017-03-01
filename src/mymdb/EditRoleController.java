@@ -97,14 +97,14 @@ public class EditRoleController implements Initializable {
     @FXML
     private void cancel(Event event)
     {
-        // TODO fix the cancel confirmation
+        // TODO is there a better way to do this??????
         String description = descriptionArea.getText();
         try
         {
             if(!description.equals(roleToModify.getDescription()))
             {
                 throw new ExpectedException("Fields have been modified. "
-                                          + "Are you sure that you want to exit?");  
+                                          + "Are you sure that you want to exit?"); 
             }
             else
             {
@@ -119,6 +119,10 @@ public class EditRoleController implements Initializable {
             if (result.get() != ButtonType.OK)
             {
                 event.consume();
+            }
+            else
+            {
+                ((Button)event.getSource()).getScene().getWindow().hide();
             }
         }
     }

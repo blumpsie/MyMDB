@@ -73,12 +73,14 @@ public class AddMovieController implements Initializable {
      {
          try
          {
-            String title = titleField.getText().trim();
+            String title = titleField.getText();
             String year = yearField.getText().trim();
             String description = descriptionArea.getText().trim();
             Director director = 
                             directorList.getSelectionModel().getSelectedItem();
          
+            // replace any extra spaces and trim off whitespace at either end
+            title = title.replaceAll("\\s+", " ").trim();
             // validation checks
             if (title.length() == 0)
             {
@@ -90,7 +92,6 @@ public class AddMovieController implements Initializable {
                                                             + "Director.");
             }
             
-            // TODO replace extra spaces in the title field
             int yearInt = Integer.valueOf(year);
             if ((yearInt < 1900) || (yearInt > Helper.currentYear()))
             {
@@ -119,12 +120,33 @@ public class AddMovieController implements Initializable {
                  
                  // reload the movieList
                  movieList.getItems().clear();
-                 Collection<Movie> movies = ORM.findAll(Movie.class);
-                 for (Movie movie : movies)
+                 if(mainController.getOrderedTitle())
                  {
-                     movieList.getItems().add(movie);
+                     Collection<Movie> movies = ORM.findAll(Movie.class, "order by title");
+                     for (Movie movie : movies)
+                     {
+                         movieList.getItems().add(movie);
+                     }
+                     mainController.getOrderedLabel().setText("Movies are Ordered by Title");
                  }
-                 
+                 else if (mainController.getOrderedYear())
+                 {
+                     Collection<Movie> movies = ORM.findAll(Movie.class, "order by year");
+                     for (Movie movie : movies)
+                     {
+                         movieList.getItems().add(movie);
+                     }
+                     mainController.getOrderedLabel().setText("Movies are Ordered by Year");
+                 }
+                 else
+                 {
+                    Collection<Movie> movies = ORM.findAll(Movie.class);
+                    for (Movie movie : movies)
+                    {
+                        movieList.getItems().add(movie);
+                    }
+                    mainController.getOrderedLabel().setText("Movies are NOT Ordered");
+                 }
                  // select the new movie
                  movieList.getSelectionModel().select(newMovie);
                  movieList.scrollTo(newMovie);

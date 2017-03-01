@@ -45,7 +45,7 @@ public class MovieCellCallback implements Callback<ListView<Movie>,
                 }
                 
                 String css = ""
-                        + "-fx-text-fill: #c00;"
+                        + "-fx-text-fill: #f4428f;"
                         + "-fx-font-weight: bold;"
                         + "-fx-font-style: italic;";
                 

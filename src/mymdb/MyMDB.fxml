@@ -46,6 +46,7 @@
          <children>
             <Button mnemonicParsing="false" onAction="#orderByTitle" text="Order Movies By Title" />
             <Button mnemonicParsing="false" onAction="#orderByYear" text="Order Movies By Year" />
+            <Label fx:id="orderedLabel" />
             <Button mnemonicParsing="false" onAction="#clear" text="Clear Selections" />
          </children>
          <padding>
